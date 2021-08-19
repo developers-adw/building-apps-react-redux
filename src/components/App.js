@@ -14,7 +14,7 @@ export default function App() {
         <Route exact path='/' component={HomePage} />
         <Route exact path='/about' component={AboutPage} />
         <Route exact path='/courses' component={CoursesPage} />
-        <Route component={PageNotFound} />A change
+        <Route component={PageNotFound} />
       </Switch>
     </div>
   );
