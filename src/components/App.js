@@ -16,6 +16,7 @@ export default function App() {
         <Route exact path='/courses' component={CoursesPage} />
         <Route component={PageNotFound} />
       </Switch>
+      this is a change
     </div>
   );
 }
