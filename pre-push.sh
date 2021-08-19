@@ -24,33 +24,14 @@ protected_branch='main'
 
 policy="\n\n[Policy] Never push code directly to the "$protected_branch" branch! (Prevented with pre-push hook.)\n\n"
 
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-
-push_command=$(ps -ocommand= -p $PPID)
-
-is_destructive='force|delete|\-f'
-
-will_remove_protected_branch=':'$protected_branch
+current_branch=$(git rev-parse --abbrev-ref HEAD)
 
 do_exit(){
   echo -e $policy
   exit 1
 }
 
-if [[ $push_command =~ $is_destructive ]] && [ $current_branch = $protected_branch ]; then
-  do_exit
-fi
-
-if [[ $push_command =~ $is_destructive ]] && [[ $push_command =~ $protected_branch ]]; then
-  do_exit
-fi
-
-if [[ $push_command =~ $will_remove_protected_branch ]]; then
-  do_exit
-fi
-
-# Prevent ALL pushes to protected_branch
-if [[ $push_command =~ $protected_branch ]] || [ $current_branch = $protected_branch ]; then
+if [ $current_branch = $protected_branch ]; then
   do_exit
 fi
 
