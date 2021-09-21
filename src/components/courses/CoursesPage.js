@@ -8,10 +8,20 @@ import CourseList from './CourseList';
 
 class CoursesPage extends Component {
   componentDidMount() {
-    this.props.actions.loadCourses().catch((err) => {
-      alert('Loading courses failed' + err);
-    });
+    const { courses, authors, actions } = this.props;
+
+    if (courses.length === 0) {
+      actions.loadCourses().catch((err) => {
+        alert('Loading courses failed' + err);
+      });
+    }
+    if (authors.length === 0) {
+      actions.loadAuthors().catch((err) => {
+        alert('Loading authors failed' + err);
+      });
+    }
   }
+
   render() {
     return (
       <>
@@ -23,13 +33,24 @@ class CoursesPage extends Component {
 }
 
 CoursesPage.propTypes = {
+  authors: PropTypes.array.isRequired,
   courses: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
 };
 
 function mapStateToProps(state) {
   return {
-    courses: state.courses,
+    courses:
+      state.authors.length === 0
+        ? []
+        : state.courses.map((courses) => {
+            return {
+              ...courses,
+              authorName: state.authors.find((a) => a.id === courses.authorId)
+                .name,
+            };
+          }),
+    authors: state.authors,
   };
 }
 
